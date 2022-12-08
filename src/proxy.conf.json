@@ -1,6 +1,9 @@
 {
   "/auth": {
     "target": "http://localhost:8880",
-    "secure": false
+    "secure": false,
+    "pathRewrite": {
+      "^/auth": ""
+    }
   }
 }
