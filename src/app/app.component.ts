@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs';
+import { ajax } from 'rxjs/ajax';
 
 @Component({
   selector: 'app-root',
@@ -35,5 +36,28 @@ export class AppComponent implements OnInit {
       .subscribe((data) => localStorage.setItem('token', JSON.stringify(data)));
   }
 
-  send() {}
+  send() {
+    let token = JSON.parse(localStorage.getItem('token')!);
+
+    const params = new URLSearchParams();
+    params.set('token', token.access_token);
+
+    let checked = false;
+
+    ajax({
+      url: '/auth/oauth/check_token',
+      async: false,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: 'Basic ' + btoa('oauth:oauth'),
+      },
+      body: params.toString(),
+    }).subscribe((data) => {
+      console.info(data);
+      checked = true;
+    });
+
+    console.info(checked);
+  }
 }
